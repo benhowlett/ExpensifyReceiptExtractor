@@ -53,6 +53,7 @@ for expense in expenses:
         print ("Image saved: " + filePath)
 
 for image in glob("Images/*.jpg"):
+    image = image.replace("\\", "/")
     fileName = image[image.find('/')+1:len(image)-4] + ".pdf"
     newFile = Image.open(image)
     newFile.convert('RGB')
