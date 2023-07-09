@@ -44,14 +44,19 @@ for expense in expenses:
      fileNames.append(fileName)
      extension = expense.get_content_file_extension()
      if extension == ".pdf":
-        request.urlretrieve(expense.url, 'PDFs/' + fileName + "_" + str(suffix) + extension)
+        filePath = 'PDFs/' + fileName + "_" + str(suffix) + extension
+        request.urlretrieve(expense.url, filePath)
+        print ("Receipt saved: " + filePath)
      elif extension == ".jpg":
-        request.urlretrieve(expense.url, 'Images/' + fileName + "_" + str(suffix) + extension) 
+        filePath = 'Images/' + fileName + "_" + str(suffix) + extension
+        request.urlretrieve(expense.url, filePath)
+        print ("Image saved: " + filePath)
 
 for image in glob("Images/*.jpg"):
     fileName = image[image.find('/')+1:len(image)-4] + ".pdf"
     newFile = Image.open(image)
     newFile.convert('RGB')
     newFile.save('PDFs/' + fileName)
+    print ("Receipt saved from image: " + fileName)
 
 print ("Receipt extraction complete.")
