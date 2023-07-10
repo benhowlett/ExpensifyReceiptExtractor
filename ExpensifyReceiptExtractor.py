@@ -1,3 +1,10 @@
+#
+# Expense Receipt Extractor
+# Created by: Ben Howlett
+# Created for: Trillium Advisory Group
+# Version: 1.0
+#
+
 from glob import glob
 import csv
 from urllib import request
