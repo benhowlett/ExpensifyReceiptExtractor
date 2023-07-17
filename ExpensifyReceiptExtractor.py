@@ -13,7 +13,7 @@ import os
 
 class Expense:
     def __init__(self, merchant, customer, name, url):
-        self.merchant = merchant
+        self.merchant = merchant.upper()
         self.customer = customer
         self.name = name
         self.url = url
@@ -48,18 +48,21 @@ for file in glob("Expense Exports/*.csv"):
 fileNames = []
 
 for expense in expenses:
-     fileName = expense.name + "_" + expense.customer + "_" + expense.merchant
-     suffix = fileNames.count(fileName) + 1
-     fileNames.append(fileName)
-     extension = expense.get_content_file_extension()
-     if extension == ".pdf":
-        filePath = 'PDFs/' + fileName + "_" + str(suffix) + extension
-        request.urlretrieve(expense.url, filePath)
-        print ("Receipt saved: " + filePath)
-     elif extension == ".jpg":
-        filePath = 'Images/' + fileName + "_" + str(suffix) + extension
-        request.urlretrieve(expense.url, filePath)
-        print ("Image saved: " + filePath)
+    if not expense.url == "":
+        fileName = expense.name + "_" + expense.customer + "_" + expense.merchant
+        suffix = fileNames.count(fileName) + 1
+        fileNames.append(fileName)
+        extension = expense.get_content_file_extension()
+        if extension == ".pdf":
+            filePath = 'PDFs/' + fileName + "_" + str(suffix) + extension
+            request.urlretrieve(expense.url, filePath)
+            print ("Receipt saved: " + filePath)
+        elif extension == ".jpg":
+            filePath = 'Images/' + fileName + "_" + str(suffix) + extension
+            request.urlretrieve(expense.url, filePath)
+            print ("Image saved: " + filePath)
+    else:
+        print ("Expense does not have a receipt")
 
 
 # Convert images to PDFs. Remove the image files 
