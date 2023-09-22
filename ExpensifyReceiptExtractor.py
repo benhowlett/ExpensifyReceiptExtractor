@@ -2,7 +2,7 @@
 # Expense Receipt Extractor
 # Created by: Ben Howlett
 # Created for: Trillium Advisory Group
-# Version: 1.0
+# Version: 2.0 
 #
 
 from glob import glob
@@ -10,6 +10,7 @@ import csv
 from urllib import request
 from PIL import Image
 import os
+import PySimpleGUI as sg
 
 class Expense:
     def __init__(self, merchant, customer, name, url):
@@ -27,6 +28,32 @@ class Expense:
                 return ".jpg"
             else:
                 return "Incompatible File Type"
+
+
+main_column = [
+    [
+        sg.Text("Welcome to the TAG Expensify Receipt Extractor.\nPlease follow the instructions below to extract receipts from Expensify exports."),
+        sg.Push(),
+        sg.Image('trillium_logo.png', size=(20, 4))
+    ],
+    [
+        sg.Text("Select the Expensify export .csv files:"),
+        sg.popup_get_file("Select Exports", multiple_files=True)
+    ],
+    [
+        sg.Listbox(
+            values=[], enable_events=True, size=(40, 10), key="-REPORT LIST-"
+        )
+    ],
+    [
+        sg.Text("Select the folder that you want the PDFs to be exported to::"),
+        sg.In(size=(25, 1), enable_events=True, key="-EXPORT FOLDER-"),
+        sg.popup_get_folder("Select Folder")
+    ],
+    [
+        sg.Button("Export Expense Receipts")
+    ]
+]
 
 
 # Create a list of Expense instances from the expense .csv file(s) in the 'Expense Exports' folder
