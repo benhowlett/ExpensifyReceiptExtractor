@@ -35,21 +35,23 @@ layout = [
     [
         sg.Text("Welcome to the TAG Expensify Receipt Extractor.\nPlease follow the instructions below to extract receipts from Expensify exports."),
         sg.Push(),
-        sg.Image('trillium_logo.png', size=(20, 4))
+        sg.Image('trillium_logo.png')
     ],
     [
         sg.Text("Select the Expensify export .csv files:"),
-        sg.popup_get_file("Select Exports", multiple_files=True)
+        sg.FilesBrowse(target="-REPORT LIST-")
     ],
     [
         sg.Listbox(
-            values=[], enable_events=True, size=(40, 10), key="-REPORT LIST-"
+            values=[], enable_events=True, size=(60, 5), key="-REPORT LIST-"
         )
     ],
     [
         sg.Text("Select the folder that you want the PDFs to be exported to::"),
-        sg.In(size=(25, 1), enable_events=True, key="-EXPORT FOLDER-"),
-        sg.popup_get_folder("Select Folder")
+    ],
+    [    
+        sg.In(size=(53, 1), enable_events=True, key="-EXPORT FOLDER-"),
+        sg.FolderBrowse()
     ],
     [
         sg.Button("Export Expense Receipts")
