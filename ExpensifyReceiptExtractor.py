@@ -39,7 +39,7 @@ layout = [
     ],
     [
         sg.Text("Select the Expensify export .csv files:"),
-        sg.FilesBrowse(target="-REPORT LIST-")
+        sg.FilesBrowse(target="-REPORT LIST-", key="-SELECT FILES-")
     ],
     [
         sg.Listbox(
@@ -51,7 +51,7 @@ layout = [
     ],
     [    
         sg.In(size=(53, 1), enable_events=True, key="-EXPORT FOLDER-"),
-        sg.FolderBrowse()
+        sg.FolderBrowse(target="-EXPORT FOLDER-")
     ],
     [
         sg.Button("Export Expense Receipts")
@@ -63,11 +63,9 @@ window = sg.Window("Expensify Receipt Extractor", layout)
 
 # Run the event loop
 while True:
-	event, values = window.read()
-	if event in ("Exit", sg.WIN_CLOSED):
-		break
-	
-	
+    event, values = window.read()
+    if event in ("Exit", sg.WIN_CLOSED):
+	    break
 
 
 # # Create a list of Expense instances from the expense .csv file(s) in the 'Expense Exports' folder
