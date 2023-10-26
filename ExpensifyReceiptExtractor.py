@@ -11,6 +11,8 @@ from urllib import request
 from PIL import Image
 import os
 import PySimpleGUI as sg
+import imghdr
+import math
 
 class Expense:
     def __init__(self, merchant, customer, name, url):
@@ -26,6 +28,8 @@ class Expense:
                 return ".pdf"
             elif info.get_content_subtype() == "jpeg":
                 return ".jpg"
+            elif info.get_content_subtype() == "png":
+                return ".png"
             else:
                 return "Incompatible File Type"
 
@@ -109,29 +113,49 @@ while True:
         for expense in expenses:
             if not expense.url == "":
                 fileName = expense.name + "_" + expense.customer + "_" + expense.merchant
+                print(fileName)
                 suffix = fileNames.count(fileName) + 1
                 fileNames.append(fileName)
                 extension = expense.get_content_file_extension()
                 if extension == ".pdf":
                     filePath = export_folder + "/" + fileName + "_" + str(suffix) + extension
                     request.urlretrieve(expense.url, filePath)
-                    # print ("Receipt saved: " + filePath)
-                elif extension == ".jpg":
+                    print ("Receipt saved: " + filePath)
+                else:
                     filePath = export_folder + '/Images/' + fileName + "_" + str(suffix) + extension
                     request.urlretrieve(expense.url, filePath)
-                    # print ("Image saved: " + filePath)
+                    print ("Image saved: " + filePath)
             else:
                 print ("Expense does not have a receipt")
 
         # Convert images to PDFs. Remove the image files 
-        for image in glob(export_folder + "/Images/*.jpg"):
+        for image in glob(export_folder + "/Images/*"):
             # Deal with Windows path formatting
             image = image.replace("\\", "/")
             fileName = os.path.basename(image)
+            fileType = imghdr.what(image)
+            #print(fileType)
+
+            if fileType == "png":
+                fileName = fileName.replace("png", "jpg")
+
+                tempFile = Image.open(image)
+                #x, y = tempFile.size
+                #print(x, y)
+                #x2, y2 = math.floor(x/2), math.floor(y/2)
+                #print(x2, y2)
+                #tempFile = tempFile.resize((x2,y2))
+                tempRGBFile = tempFile.convert('RGB')
+                tempFilePath = export_folder + "/Images/" + fileName
+                tempRGBFile.save(tempFilePath, optimize=True, quality=95)
+
             fileName = fileName.replace("jpg", "pdf")
 
             # Open the image and convert to PDF
-            newFile = Image.open(image)
+            if fileType == "png":
+                newFile = tempRGBFile
+            else:
+                newFile = Image.open(image)
             newFile.convert('RGB')
             newFile.save(export_folder + "/" + fileName)
             # print ("Receipt saved from image: " + fileName)
@@ -139,6 +163,8 @@ while True:
             # Delete the image file
             if os.path.isfile(image):
                 os.remove(image)
-        
+            if os.path.isfile(tempFilePath):
+                os.remove(tempFilePath)
+
         # Remove the Images directory
         os.rmdir(export_folder + "/Images")
