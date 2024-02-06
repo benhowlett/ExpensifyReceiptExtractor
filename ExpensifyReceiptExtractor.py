@@ -16,7 +16,7 @@ import math
 
 class Expense:
     def __init__(self, merchant, customer, name, url):
-        self.merchant = merchant.upper()
+        self.merchant = merchant.upper().replace("/","_")
         self.customer = customer
         self.name = name
         self.url = url
