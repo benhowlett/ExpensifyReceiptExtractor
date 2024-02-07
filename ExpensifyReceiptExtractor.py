@@ -136,8 +136,9 @@ while True:
             fileType = imghdr.what(image)
             #print(fileType)
 
-            if fileType == "png":
+            if fileType == "png" or fileType == "jpeg":
                 fileName = fileName.replace("png", "jpg")
+                fileName = fileName.replace("jpeg", "jpg")
 
                 tempFile = Image.open(image)
                 #x, y = tempFile.size
@@ -159,7 +160,7 @@ while True:
             newFile.convert('RGB')
             newFile.save(export_folder + "/" + fileName)
             # print ("Receipt saved from image: " + fileName)
-
+            print("tempFilePath: " + tempFilePath)
             # Delete the image file
             if os.path.isfile(image):
                 os.remove(image)
